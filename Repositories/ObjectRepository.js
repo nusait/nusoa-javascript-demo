@@ -19,13 +19,14 @@ function ObjectRepository(HttpsRequest) {
 
 	this._HttpsRequest = HttpsRequest;
 
-	this.hostname = 'nusoa.northwestern.edu';
 	this.topLevelDirectory = 'WCAS_SOA_POC'
-	this.version  = 'v1'; // can be overridden by user
+	this.hostname   = 'nusoa.northwestern.edu';
+	this.version    = 'v1'; // can be overridden by user
 	this.descriptor = null; // this needs be set by user
-	this.user     = envStore.user || null;
-	this.password = envStore.password || null;
-	this.timeout  = {Accept: 'application/json'};
+	this.user       = envStore.user || null;
+	this.password   = envStore.password || null;
+	this.timeout    = 1000;
+	this.headers    = {Accept: 'application/json'};
 };
 
 ObjectRepository.prototype.visible = function() {

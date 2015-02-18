@@ -13,10 +13,9 @@
 
 'use strict';
 
-function BrowserHttpsRequest(XMLHttpRequest, FormData) {
+function BrowserHttpsRequest(XMLHttpRequest) {
 
     this._XMLHttpRequest = XMLHttpRequest;
-    this._FormData = FormData;
 };
 
 BrowserHttpsRequest.prototype.send = function() {
