@@ -1,7 +1,4 @@
-# JavaScript examples
-
-
-Take note that we are dealing in the realm of asyncronous calls. That is, the application's single thread doesn't stop while your process is _pending_.
+# Nusoa JavaScript examples
 
 To be able to hit the Nusoa bus, you need to connected to NU's internal NU network. While the specifics are the firewall are somewhat unclear at this stage (e.g. is just being on the NU wireless enough?), a VPN connection to the university does seem to allow access.
 
@@ -111,6 +108,8 @@ sendingRequest.then(log, error);
 
 
 This is better than the browser's internal way of performing AJAX requests, but it would be even nicer to have a repository class that simplifies all the http requests for us, giving a nicer client API to work with as we experiment with the routes.  But we still want to be dealing in the world of JavaScript promises. Using our HttpsRequest class as a dependency, imageine if we could have another abstraction do something like this:
+
+[Click here to find the code](Repositories/ObjectRepository.js) which "ObjectRepository" interface in a browser context. **Copy and paste that entire `ObjectRepository.js`file into your console, hit return, and then also copy and paste the below code snippet.**  Does it work?
 
 ```javascript
 // let's create the repo, and make it work on the 'things' data store:
