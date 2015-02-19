@@ -25,7 +25,7 @@ function ObjectRepository(HttpsRequest) {
 	this.descriptor = null; // this needs be set by user
 	this.user       = envStore.user || null;
 	this.password   = envStore.password || null;
-	this.timeout    = 1000;
+	this.timeout    = 10000;
 	this.headers    = {Accept: 'application/json'};
 };
 
@@ -95,17 +95,32 @@ ObjectRepository.prototype.get = function(id) {
 	}).send().then(getNestedObject);
 };
 
-ObjectRepository.prototype.remove = function(id) {
+ObjectRepository.prototype.remove = function(idArg) {
 
-	return this._HttpsRequest.make({
-	    method:   'DELETE',
-	    hostname: this.hostname,
-	    path:     this.path + '/' + id,
-	    user:     this.user,
-	    password: this.password,
-	    timeout:  this.timeout,
-	    headers:  this.headers,
-	}).send();
+	var ins = this;
+	// if id is array of ids, remove them all, sequentially:
+	if (idArg.length) {
+
+		var prevPromise = Promise.resolve();
+		idArg.forEach( function(id) {
+			prevPromise = prevPromise.then(ins.remove.bind(ins, id));
+		});
+
+		var doneResponse = function() {return {message: 'ok'};};
+		return prevPromise.then(doneResponse);
+
+	} else {
+	// else just remove the one id:
+		return this._HttpsRequest.make({
+		    method:   'DELETE',
+		    hostname: this.hostname,
+		    path:     this.path + '/' + idArg,
+		    user:     this.user,
+		    password: this.password,
+		    timeout:  this.timeout,
+		    headers:  this.headers,
+		}).send();	
+	}
 };
 
 ObjectRepository.prototype.create = function(params) {
@@ -114,9 +129,9 @@ ObjectRepository.prototype.create = function(params) {
 	var dataObj = {};
 	dataObj[descriptor] = params;
 
-	var getNested = function(data) {
-
-		return data[descriptor];
+	function getIdFromResponse(object) {
+		
+		return parseInt(/\d+/.exec(object.message[0]), 10)
 	}
 
 	return this._HttpsRequest.make({
@@ -128,10 +143,36 @@ ObjectRepository.prototype.create = function(params) {
 	    timeout:  this.timeout,
 	    headers:  this.headers,
 	    dataString: JSON.stringify(dataObj),
-	}).send().then(getNested);
+	}).send().then(getIdFromResponse).then(this.get.bind(this));
 };
 
+ObjectRepository.prototype.first = function(array) {
+
+	function getFirst(array) {
+		if (array && array.length) return array[0];
+		return null;
+	}
+	
+	return this.all().then(getFirst);
+}
+
+ObjectRepository.prototype.last = function(array) {
+
+	function getLast(array) {
+		if (array && array.length) {
+			var lastIndex = array.length - 1;
+			return array[lastIndex];
+		}
+		return null;
+	}
+	
+	return this.all().then(getLast);
+}
+
 ObjectRepository.prototype.edit = function(id, newProps) {
+
+	var ins = this;
+	var modifiedId;
 
 	if (typeof newProps !== 'object') {
 		return Promise.reject(new Error('2nd parameter must be an object'));
@@ -144,6 +185,7 @@ ObjectRepository.prototype.edit = function(id, newProps) {
 
 	var addNewPropertiesToObject = function(object) {
 
+		modifiedId = object.id;
 		Object.keys(newProps).forEach( function(key) {
 			object[key] = newProps[key];
 		});
@@ -152,9 +194,16 @@ ObjectRepository.prototype.edit = function(id, newProps) {
 
 	var saveObjectReplacingOld = this.create.bind(this);
 
+	var getModifiedObjectByID = function() {
+
+		return ins.get(modifiedId);
+	};
+
 	return getObjectFromRepo()
 		.then(addNewPropertiesToObject)
-		.then(saveObjectReplacingOld);
+		.then(saveObjectReplacingOld) 
+		// response ID not consistent, get it again:
+		.then(getModifiedObjectByID);
 };
 
 Object.defineProperties(ObjectRepository.prototype, {
