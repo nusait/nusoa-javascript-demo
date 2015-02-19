@@ -131,6 +131,8 @@ So we see above how to create things with repo. Let's take a look at some of the
 repo.all().then(table, error);
 ```
 
+![table of items](docs/images/table-view.png?raw=true)
+
 ```javascript=
 repo.all({type: 'clay'}).then(table, error);
 ```
