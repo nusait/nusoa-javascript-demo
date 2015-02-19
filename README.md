@@ -83,7 +83,7 @@ Hitting the other other WCAS-SOC-POC API routes follow much of the same above pa
 
 Clearly, creating browser XMLHttpRequests in the above fashion is tedious and not very readable.  It would also be nice that a request return a [JavaScript Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise), giving us a modern and conventional way of dealing with asyncronous operations.  jQuery's AJAX capabilities could help us with these two concerns, but to really take fuller control of how our abstraction, I'd rather roll my own.
 
-So [click here to find the code](https://github.com/nusait/nusoa-javascript-demo/blob/master/Services/HttpsRequest/BrowserHttpsRequest.js) whichs implement my "HttpsRequest" interface in a browser context. **Copy and paste that entire `BrowserHttpsRequest.js`file into your console, hit return, and then also copy and paste the below code snippet.**  Does it work?
+So [click here to find the code](Services/HttpsRequest/BrowserHttpsRequest.js) whichs implement my "HttpsRequest" interface in a browser context. **Copy and paste that entire `BrowserHttpsRequest.js`file into your console, hit return, and then also copy and paste the below code snippet.**  Does it work?
 
 
 ```javascript
