@@ -42,6 +42,57 @@ ObjectRepository.prototype.visible = function() {
 	}).send();
 };
 
+ObjectRepository.prototype.setAccess = function(access) {
+
+	var validTypes = ['public-read','private'];
+
+	if (validTypes.indexOf(access) < 0) {
+		return Promise.reject(new Error('not valid access type'));
+	}
+
+	var dataObj = { access_control: access };
+
+	return this._HttpsRequest.make({
+	    method:   'POST',
+	    hostname: this.hostname,
+	    path:     this.basePath,
+	    user:     this.user,
+	    password: this.password,
+	    timeout:  this.timeout,
+	    headers:  this.headers,
+	    dataString: JSON.stringify(dataObj),
+	}).send();
+};
+
+ObjectRepository.prototype.setPermissions = function(permissions) {
+
+	var dataObj = { ldap_accounts: permissions };
+
+	return this._HttpsRequest.make({
+	    method:   'POST',
+	    hostname: this.hostname,
+	    path:     this.path,
+	    user:     this.user,
+	    password: this.password,
+	    timeout:  this.timeout,
+	    headers:  this.headers,
+	    dataString: JSON.stringify(dataObj),
+	}).send();
+};
+
+ObjectRepository.prototype.dropEntireObjectType = function() {
+
+	return this._HttpsRequest.make({
+	    method:   'DELETE',
+	    hostname: this.hostname,
+	    path:     this.path,
+	    user:     this.user,
+	    password: this.password,
+	    timeout:  this.timeout,
+	    headers:  this.headers,
+	}).send();
+};
+
 ObjectRepository.prototype.all = function(filters) {
 
 	filters = filters || {};
