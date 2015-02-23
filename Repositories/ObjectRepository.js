@@ -182,12 +182,13 @@ ObjectRepository.prototype.create = function(params) {
 	var dataObj = {};
 	dataObj[descriptor] = params;
 
-	function getIdFromResponse(object) {
-		
-		return parseInt(/\d+/.exec(object.message[0]), 10)
+	function getFromDescriptor(object) {
+
+		return object[descriptor];
 	}
 
 	return this._HttpsRequest.make({
+
 	    method:   'POST',
 	    hostname: this.hostname,
 	    path:     this.path,
@@ -196,7 +197,8 @@ ObjectRepository.prototype.create = function(params) {
 	    timeout:  this.timeout,
 	    headers:  this.headers,
 	    dataString: JSON.stringify(dataObj),
-	}).send().then(getIdFromResponse).then(this.get.bind(this));
+
+	}).send().then(getFromDescriptor);
 };
 
 ObjectRepository.prototype.first = function(array) {
