@@ -1,55 +1,49 @@
-
-
-// THIS IMPLEMENTATION IS NOT COMPLETE, STILL A WORK IN PROGRESS!
-
 'use strict';
 
-const https = require('https');
-const log   = console.log.bind(console);
+const log = console.log.bind(console);
+const privates = new WeakMap();
+const _ = privates.get.bind(privates);
 
 class IojsHttpsRequest {
 
+    constructor(https) {
+
+        privates.set(this, {
+            https: https || require('https')
+        });
+    }
+
     send() {
 
-        var cancel, ins = this;
+        var ins   = this;
+        var abort = () => {};
+        var https = _(ins).https;
 
-        if (ins.user && ins.password) {
-            this.auth = `${ins.user}:${ins.password}`;
-        }
+        if (ins.user && ins.password) ins.auth = `${ins.user}:${ins.password}`;
 
         var promise = new Promise((resolve, reject) => {
 
-            var onResponse = message => {
+            var request = https.request(ins);
+
+            request.on('error', () => reject( Error('network') ));
+            request.on('response', message => {
 
                 var responseText = '';
-                var statusCode = message.statusCode;
+                var statusCode   = message.statusCode;
 
                 message.setEncoding('utf8')
                     .on('data', chunk => responseText += chunk)
                     .on('end', () => {
 
                         switch (statusCode) {
-
-                            case 200:
-                                resolve(responseText);
-                                break;
-
-                            case 401:
-                                reject(Error('unauthorized'));
-                                break;
-
-                            case 404:
-                                reject(Error('not_found'));
-                                break;
-
-                            default:
-                                reject(Error(`${statusCode}: ${responseText}`));
+                            case 200: resolve(JSON.parse(responseText)); break;
+                            case 401: reject(Error('unauthorized')); break;
+                            case 403: reject(Error('forbidden')); break;
+                            case 404: reject(Error('not_found')); break;
+                            default:  reject(Error('unknown_error_onload'));
                         }
                     });
-            };
-
-            var request = https.request(ins, onResponse);
-            request.on('error', reject);
+            });
             request.end();
 
             if (ins.timeout) {
@@ -59,18 +53,21 @@ class IojsHttpsRequest {
                 });
             }
 
-            cancel = () => {
+            abort = () => {
                 request.abort();
                 reject( Error('aborted') );
             };
         });
-
-        promise.cancel = () => {
-            if (cancel) cancel();
-        };
-
+        promise.abort = abort;
         return promise;
     }
 }
+
+IojsHttpsRequest.make = options => {
+
+    var req = new this(this.https);
+    Object.keys(options).forEach(key => req[key] = options[key]);
+    return req;
+};
 
 module.exports = IojsHttpsRequest;

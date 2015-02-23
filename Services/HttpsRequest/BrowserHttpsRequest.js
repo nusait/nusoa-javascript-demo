@@ -1,5 +1,7 @@
 (function (root, factory) {
 
+    // console.log(root);
+ 
     if (typeof define === 'function' && define.amd) {
         define('BrowserHttpsRequest', factory);
     } else if (typeof exports === 'object') {
@@ -8,14 +10,12 @@
         root.BrowserHttpsRequest = factory();
   }
 
-}(this, function () {
+}(this, function (global) {
 // =================================================================
-
-'use strict';
 
 function BrowserHttpsRequest(XMLHttpRequest) {
 
-    this._XMLHttpRequest = XMLHttpRequest;
+    this._XMLHttpRequest = XMLHttpRequest || global.XMLHttpRequest;
 };
 
 BrowserHttpsRequest.prototype.send = function() {
@@ -64,13 +64,6 @@ BrowserHttpsRequest.XMLHttpRequest = null;
 
 BrowserHttpsRequest.make = function(options) {
 
-    if ( ! this.XMLHttpRequest ) {
-        throw new Error(
-            'BrowserHttpsRequest.XMLHttpRequest ' +
-            'depedency not met'
-        );
-    }
-
     var req = new this(this.XMLHttpRequest);
     Object.keys(options).forEach( function(key) {
         req[key] = options[key];
@@ -81,4 +74,4 @@ BrowserHttpsRequest.make = function(options) {
 return BrowserHttpsRequest;
 
 // =================================================================
-}));
+}(this)));

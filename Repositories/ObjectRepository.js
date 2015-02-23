@@ -99,7 +99,9 @@ ObjectRepository.prototype.all = function(filters) {
 	var queryString = objectToQueryString(filters);
 
 	var descriptor = this.descriptor;
+
 	var makeIntoArray = function(data) {
+
 		data = data[descriptor];
 		return Object.keys(data).map( function(key) {
 			return data[key];
