@@ -7,7 +7,7 @@
     "doc": "docs"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "dependencies": {
     "console.table": "^0.4.0"
@@ -25,5 +25,6 @@
   "bugs": {
     "url": "https://github.com/nusait/nusoa-javascript-demo/issues"
   },
-  "homepage": "https://github.com/nusait/nusoa-javascript-demo"
+  "homepage": "https://github.com/nusait/nusoa-javascript-demo",
+  "devDependencies": {}
 }

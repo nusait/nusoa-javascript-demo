@@ -145,6 +145,8 @@ By leveraging the `console.table()` functionality, we get a nice view of our dat
 
 <p align=center><img width=585 height=118 src=docs/images/table-view.png?raw=true /></p>
 
+The resultant array will be ordered by ascending `id`.
+
 We also can filter using key / value pairs.  The filter operation is done by the backend API service.
 
 ```javascript
@@ -248,9 +250,17 @@ repo.setPermissions({
 
 ### `repo.first()` *and* `repo.last()`
 
-These methods will also be fulfilled with a single object indicated by its position in collection returned by `repo.all`.  Don't put too much credence in whether these methods return a record based on ID or creation time, I was just toying around, maybe it was a mistake to include these methods. The backend API doesn't state that the order the records come back is significant. 
+These methods will also be fulfilled with a single object indicated by its position in the collection returned by `repo.all`.  Recall that `repo.all` will return an array ordered by ascending `id`.
 
-Actually, we could order these by ID on the client side, and then spit back the first or last record.  This can be put on my "to do" list. :P
+You can also pass in filter object as you would with `repo.all`, e.g. `{name: 'John'}`.
+
+```javascript
+repo.first({name: 'David'}).then(log, error);
+```
+
+### `repo.find()`
+
+`repo.find` is an alias to `repo.first` (see above).
 
 ### Changing the repo's destination on the fly
 

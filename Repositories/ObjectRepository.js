@@ -123,7 +123,7 @@ ObjectRepository.prototype.all = function(filters) {
 	    timeout:  this.timeout,
 	    headers:  this.headers,
 
-	}).send().then(makeIntoArray, convert404toNull);
+	}).send().then(makeIntoArray).then(orderById, convert404toNull);
 };
 
 ObjectRepository.prototype.get = function(id) {
@@ -201,17 +201,17 @@ ObjectRepository.prototype.create = function(params) {
 	}).send().then(getFromDescriptor);
 };
 
-ObjectRepository.prototype.first = function(array) {
+ObjectRepository.prototype.first = function(filters) {
 
 	function getFirst(array) {
 		if (array && array.length) return array[0];
 		return null;
 	}
 	
-	return this.all().then(getFirst);
+	return this.all(filters).then(getFirst);
 }
 
-ObjectRepository.prototype.last = function(array) {
+ObjectRepository.prototype.last = function(filters) {
 
 	function getLast(array) {
 		if (array && array.length) {
@@ -221,7 +221,7 @@ ObjectRepository.prototype.last = function(array) {
 		return null;
 	}
 	
-	return this.all().then(getLast);
+	return this.all(filters).then(getLast);
 }
 
 ObjectRepository.prototype.edit = function(id, newProps) {
@@ -276,6 +276,8 @@ Object.defineProperties(ObjectRepository.prototype, {
 	},
 });
 
+ObjectRepository.prototype.find = ObjectRepository.prototype.first;
+
 if ( ! ObjectRepository.name ) ObjectRepository.name = 'ObjectRepository';
 
 // helpers
@@ -291,6 +293,13 @@ function objectToQueryString(filters) {
 	if (filters.length) queryString = '?' + filters.join('&');
 
 	return queryString;	
+}
+
+function orderById(array) {
+
+	return array.sort((a,b) => {
+		return a.id - b.id;
+	});
 }
 
 return ObjectRepository;
