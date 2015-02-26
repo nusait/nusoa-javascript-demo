@@ -256,9 +256,9 @@ ObjectRepository.prototype.edit = function(id, newProps) {
 
 	return getObjectFromRepo()
 		.then(addNewPropertiesToObject)
-		.then(saveObjectReplacingOld) 
+		.then(saveObjectReplacingOld); 
 		// response ID not consistent, get it again:
-		.then(getModifiedObjectByID);
+		// .then(getModifiedObjectByID);
 };
 
 Object.defineProperties(ObjectRepository.prototype, {
