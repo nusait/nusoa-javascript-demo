@@ -1,21 +1,3 @@
-(function (root, factory) {
-
-    console.log('1');
-    console.log(root);
-    console.log('2');
-    console.log(factory());
-    console.log('3');
-
-    if (typeof define === 'function' && define.amd) {
-        define('BrowserHttpsRequest', factory);
-    } else if (typeof exports === 'object') {
-        module.exports = factory(root);
-    } else {
-        root.BrowserHttpsRequest = factory(root);
-  }
-
-}(this, function (global) {
-// =================================================================
 
 function BrowserHttpsRequest(XMLHttpRequest) {
 
@@ -74,9 +56,5 @@ BrowserHttpsRequest.make = function(options) {
     });
     return req;
 };
-console.log(BrowserHttpsRequest)
-window.BrowserHttpsRequest = BrowserHttpsRequest;
-return BrowserHttpsRequest;
 
-// =================================================================
-}));
+export default BrowserHttpsRequest;

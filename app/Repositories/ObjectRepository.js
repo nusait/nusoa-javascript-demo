@@ -1,15 +1,4 @@
-(function (root, factory) {
 
-    if (typeof define === 'function' && define.amd) {
-        define('ObjectRepository', factory);
-    } else if (typeof exports === 'object') {
-        module.exports = factory();
-    } else {
-        root.ObjectRepository = factory();
-  }
-}(this, function () {
-// =================================================================
-'use strict';
 
 function ObjectRepository(HttpsRequest) {
 
@@ -17,7 +6,7 @@ function ObjectRepository(HttpsRequest) {
 	if (typeof sessionStorage === 'object')         envStore = sessionStorage;
 	if (typeof process === 'object' && process.env) envStore = process.env;
 
-	this._HttpsRequest = HttpsRequest;
+	this._HttpsRequest = HttpsRequest; 
 
 	this.topLevelDirectory = 'WCAS_SOA_POC'
 	this.hostname   = 'nusoa.northwestern.edu';
@@ -302,7 +291,4 @@ function orderById(array) {
 	});
 }
 
-return ObjectRepository;
-
-// =================================================================
-}));
+export default ObjectRepository;

@@ -1,29 +1,32 @@
 'use strict';
 
 const log = console.log.bind(console);
-const privates = new WeakMap();
-const _ = privates.get.bind(privates);
+// const privates = new WeakMap();
+// const _ = privates.get.bind(privates);
 
-class IojsHttpsRequest {
+class NodeHttpsRequest {
 
     constructor(https) {
 
-        privates.set(this, {
-            https: https || require('https')
-        });
+        this.https = https;
+
+        // privates.set(this, {
+        //     https: https || require('https')
+        // });
     }
 
     send() {
 
         var ins   = this;
         var abort = () => {};
-        var https = _(ins).https;
+        // var https = _(ins).https;
+        var {https, user, password, timeout} = ins;
 
-        if (ins.user && ins.password) ins.auth = `${ins.user}:${ins.password}`;
+        if (user && password) ins.auth = `${user}:${password}`;
 
         var promise = new Promise((resolve, reject) => {
 
-            var request = https.request(ins);
+            var request = https.request(ins); 
 
             request.on('error', () => reject( Error('network') ));
             request.on('response', message => {
@@ -31,9 +34,9 @@ class IojsHttpsRequest {
                 var responseText = '';
                 var statusCode   = message.statusCode;
 
-                message.setEncoding('utf8')
-                    .on('data', chunk => responseText += chunk)
-                    .on('end', () => {
+                message.setEncoding('utf8');
+                message.on('data', chunk => responseText += chunk);
+                message.on('end', () => {
 
                         switch (statusCode) {
                             case 200: resolve(JSON.parse(responseText)); break;
@@ -46,8 +49,8 @@ class IojsHttpsRequest {
             });
             request.end();
 
-            if (ins.timeout) {
-                request.setTimeout(ins.timeout, () => {
+            if (timeout) {
+                request.setTimeout(timeout, () => {
                     request.abort();
                     reject( Error('timeout') );
                 });
@@ -63,11 +66,11 @@ class IojsHttpsRequest {
     }
 }
 
-IojsHttpsRequest.make = options => {
+NodeHttpsRequest.make = function(options) {
 
     var req = new this(this.https);
     Object.keys(options).forEach(key => req[key] = options[key]);
     return req;
 };
 
-module.exports = IojsHttpsRequest;
+export default NodeHttpsRequest;

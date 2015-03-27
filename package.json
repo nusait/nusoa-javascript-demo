@@ -10,7 +10,9 @@
     "test": "jest"
   },
   "dependencies": {
-    "console.table": "^0.4.0"
+    "console.table": "^0.4.0",
+    "es6-promise": "^2.0.1",
+    "repl-promised": "^0.1.0"
   },
   "repository": {
     "type": "git",
@@ -26,5 +28,18 @@
     "url": "https://github.com/nusait/nusoa-javascript-demo/issues"
   },
   "homepage": "https://github.com/nusait/nusoa-javascript-demo",
-  "devDependencies": {}
+  "devDependencies": {
+    "browserify": "^9.0.3",
+    "gulp": "^3.8.11",
+    "gulp-babel": "^4.0.0",
+    "gulp-changed": "^1.2.1",
+    "gulp-filesize": "0.0.6",
+    "gulp-notify": "^2.2.0",
+    "gulp-rename": "^1.2.0",
+    "gulp-size": "^1.2.1",
+    "gulp-sourcemaps": "^1.5.1",
+    "gulp-uglify": "^1.1.0",
+    "run-sequence": "^1.0.2",
+    "vinyl-transform": "^1.0.0"
+  }
 }
