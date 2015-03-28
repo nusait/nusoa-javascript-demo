@@ -11,7 +11,9 @@ var repo = new ObjectRepository(BrowserHttpsRequest);
 
 // get SOA credentials from session storage
 var {user, password} = sessionStorage;
-if ( (!user) && (!password) ) throw 'no sessionStorage.user and sessionStorage.password';
+if ( (!user) && (!password) ) {
+    throw 'no sessionStorage.user and sessionStorage.password';
+}
 
 repo.user     = user;
 repo.password = password;

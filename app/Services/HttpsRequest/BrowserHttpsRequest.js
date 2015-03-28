@@ -2,7 +2,7 @@
 function BrowserHttpsRequest(XMLHttpRequest) {
 
     this._XMLHttpRequest = XMLHttpRequest || global.XMLHttpRequest;
-};
+}
 
 BrowserHttpsRequest.prototype.send = function() {
 

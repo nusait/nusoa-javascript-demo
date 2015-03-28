@@ -2,21 +2,15 @@
 
 function ObjectRepository(HttpsRequest) {
 
-	var envStore = {};
-	if (typeof sessionStorage === 'object')         envStore = sessionStorage;
-	if (typeof process === 'object' && process.env) envStore = process.env;
-
 	this._HttpsRequest = HttpsRequest; 
 
-	this.topLevelDirectory = 'WCAS_SOA_POC'
+	this.topLevelDirectory = 'WCAS_SOA_POC';
 	this.hostname   = 'nusoa.northwestern.edu';
 	this.version    = 'v1'; // can be overridden by user
 	this.descriptor = null; // this needs be set by user
-	this.user       = envStore.user || null;
-	this.password   = envStore.password || null;
 	this.timeout    = 10000;
 	this.headers    = {Accept: 'application/json'};
-};
+}
 
 ObjectRepository.prototype.visible = function() {
 
@@ -100,7 +94,7 @@ ObjectRepository.prototype.all = function(filters) {
 	var convert404toNull = function(error) {
 		if (error.message === 'not_found') return null;
 		return Promise.reject(error);
-	}
+	};
 
 	return this._HttpsRequest.make({
 
@@ -124,7 +118,7 @@ ObjectRepository.prototype.get = function(id) {
 		 var objects  = data[descriptor];
 		 var index = Object.keys(objects)[0];
 		 return objects[index];
-	}
+	};
 
 	return this._HttpsRequest.make({
 	    method:   'GET',
@@ -198,7 +192,7 @@ ObjectRepository.prototype.first = function(filters) {
 	}
 	
 	return this.all(filters).then(getFirst);
-}
+};
 
 ObjectRepository.prototype.last = function(filters) {
 
@@ -211,7 +205,7 @@ ObjectRepository.prototype.last = function(filters) {
 	}
 	
 	return this.all(filters).then(getLast);
-}
+};
 
 ObjectRepository.prototype.edit = function(id, newProps) {
 
